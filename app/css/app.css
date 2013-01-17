@@ -1,0 +1,129 @@
+/* app css stylesheet */
+
+html{
+  font-family:arial, sans-serif;
+}
+
+body{
+  font-size:16px;
+  background-color:#242621;
+  margin:0;
+  padding:0;
+}
+
+h1, h2, h3, h4, h5, h6, body{
+  color:#242621;
+}
+
+a{
+  color:#14733D;
+}
+
+header, footer, .content{
+  margin:0 auto;
+  padding:0 10%;
+}
+
+header{
+  background-color:#242621;
+  padding:0 10%;
+  border-bottom: 3px solid #14733D;
+}
+
+header h1{
+  color:#D9D7C5;
+  font-size:25px;
+  line-height:25px;
+  font-weight:normal;
+}
+
+.content{
+  padding:20px 10%;
+  background:#D9D7C5;
+}
+
+input, select{
+  font-size:16px;
+}
+
+input.large{
+  font-size:25px;
+  height: 40px;
+}
+
+.legal, footer{
+  font-size:10px;
+  line-height:1.1em;
+  color:#727368;
+}
+
+.legal{
+  font-weight:bold;
+}
+
+.legal span{
+  font-weight:normal;
+}
+
+#exchangeResults, .exchangeHistory{
+  background-color:#165933;
+  color:#D9D7C5;
+  border-radius: 4px;
+  padding:20px;
+  margin:10px 0 20px;
+  text-align:center; 
+}
+
+.exchangeHistory{
+  background: #14733D;
+}
+
+#exchangeResults h3, .exchangeHistory h3{
+  color:inherit;
+  font-weight:normal;
+  margin-top:0;
+  font-size:20px;
+  line-height:25px;
+}
+
+#exchangeResults p:last-child, .exchangeHistory p:last-child{
+  margin:0;
+}
+
+.adLink{
+  font-size:14px;
+  color:#242621; 
+  text-align:center; 
+}
+
+.adLink .banner{
+  clear:both;
+  display:block;
+  margin:15px auto 0;
+}
+
+.adLink a, .adLink a:link, .adLink a:visited, .adLink a:hover, .adLink a:active{
+  color:#D9D7C5; 
+}
+
+
+#exchangeToday, #exchangeTodayCopy{
+  font-size:100px;  
+  line-height:100px;
+  margin:0;
+  white-space:nowrap;
+}
+
+#exchangeTodayCopy{
+  position:absolute;
+  visibility:hidden;
+}
+
+footer{
+  background-color: #242621;
+  color: #D9D7C5;
+  margin: 0;
+  height: 62px;
+  border-top: 3px solid #14733D;
+  padding-top: 10px;
+}

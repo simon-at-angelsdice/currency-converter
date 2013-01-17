@@ -1,0 +1,26 @@
+    <article class="row-fluid">
+      <input id="exchangeAmount" type="number" ng-model="howMuch" class="span12 large" value="1" ng-change="checkLength(howMuch)"></input><br/>
+      <select class="span12" ng-model='selectedFromCode' ng-change="setFromCode(selectedFromCode)" ng-options="symbol as getCurrencyNameFull(symbol) for (symbol, country) in currencies">
+      </select> <br/>
+      <select class="span12" ng-model='selectedToCode' ng-change="setToCode(selectedToCode)" ng-options="symbol as getCurrencyNameFull(symbol) for (symbol, country) in currencies">
+      </select> <br/>
+      <div id="exchangeResults" ng-show="selectedFromCode && selectedToCode">
+        <p id="exchangeToday">{{todayTotal}}</p>
+        <p id="exchangeTodayCopy">{{todayTotal}}</p>
+        <!-- <p class="adLink">
+          <a href="http://www.travelex.co.uk">Pre-order your foreign currency online and pick up at the airport before you depart. It's the best price and commission free</a>
+          <img class="banner" src="https://members.cj.com/member/publisher/creative/10534096.gif"/>
+          <img class="banner" src="https://members.cj.com/member/publisher/creative/10986080.gif"/>
+        </p> -->
+      </div>
+      <div class="exchangeHistory" ng-show="selectedFromCode && selectedToCode">
+        <h3>Historical values</h3>
+        <p>1 week ago = {{weekTotal}}</p>
+        <p>1 year ago = {{yearTotal}}</p>
+      </div>
+      <div class="legal">
+        <p>Disclaimer: <span ng-bind-html="disclaimer"></span></p>
+        <p>License: <span ng-bind-html="license"></span></p>
+      </div>
+    </article>
+
