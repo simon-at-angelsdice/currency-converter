@@ -4,27 +4,21 @@
 
 function JSON_CALLBACK(data) {
     // returning from async callbacks is (generally) meaningless
-    console.log("callback");
 }
 
 function CurrenciesCtrl($scope, $http, Currencies){
-	
 	var todayDate = new Date();
 	todayDate = todayDate.getFullYear() + "-" + ('0'+todayDate.getMonth()+1).slice(-2) + "-" + ('0'+todayDate.getDate()).slice(-2);
-	console.log(localStorage.getItem("today") + " - " + todayDate);
-	if (todayDate != localStorage.getItem("today")){ console.log("localStorage.getItem('today') != null");}
-	if (localStorage.getItem("today") !== null && todayDate == localStorage.getItem("today"))
+	if (window.localStorage.getItem("today") !== null && todayDate == window.localStorage.getItem("today"))
 	{
-		console.log(JSON.parse(localStorage.getItem("todaysRates")));
-		$scope.exchangeRates = JSON.parse(localStorage.getItem("todaysRates"));
-		$scope.exchangeRates1year = JSON.parse(localStorage.getItem("weekRates"));
-		$scope.exchangeRates1Week = JSON.parse(localStorage.getItem("yearRates"));		
-		$scope.disclaimer = localStorage.getItem("disclaimer");
-		$scope.license = localStorage.getItem("license");
+		$scope.exchangeRates = JSON.parse(window.localStorage.getItem("todaysRates"));
+		$scope.exchangeRates1year = JSON.parse(window.localStorage.getItem("weekRates"));
+		$scope.exchangeRates1Week = JSON.parse(window.localStorage.getItem("yearRates"));		
+		$scope.disclaimer = window.localStorage.getItem("disclaimer");
+		$scope.license = window.localStorage.getItem("license");
 	}
 	else
 	{
-		console.log("using remote data");
 		//$scope.getNewData();
 		$scope.exchangeRates = Currencies.getTodayRates(function(exchangeRates){
 			$scope.isComplete();
@@ -63,6 +57,7 @@ function CurrenciesCtrl($scope, $http, Currencies){
 	$scope.$watch('howMuch', function() {
 		//$scope.howMuch = $scope.howMuch.replace(/[^\d.]+/g, '');//parseInt($scope.howMuch);
 		$scope.setTotals();
+		resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
 	});
 
 	$scope.isComplete = function(){
@@ -72,19 +67,21 @@ function CurrenciesCtrl($scope, $http, Currencies){
 			$scope.setTotals();
 			var storedDate = new Date();
 			storedDate = storedDate.getFullYear() + "-" + ('0'+storedDate.getMonth()+1).slice(-2) + "-" + ('0'+storedDate.getDate()).slice(-2);
-			localStorage.clear();
-			localStorage.setItem("today", storedDate);
-			localStorage.setItem("todaysRates", JSON.stringify($scope.exchangeRates));
-			localStorage.setItem("weekRates", JSON.stringify($scope.exchangeRates1Week));
-			localStorage.setItem("yearRates", JSON.stringify($scope.exchangeRates1year));
+			window.localStorage.clear();
+			window.localStorage.setItem("today", storedDate);
+			window.localStorage.setItem("todaysRates", JSON.stringify($scope.exchangeRates));
+			window.localStorage.setItem("weekRates", JSON.stringify($scope.exchangeRates1Week));
+			window.localStorage.setItem("yearRates", JSON.stringify($scope.exchangeRates1year));
 
 			var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-			$scope.disclaimer = $scope.exchangeRates.disclaimer.replace(exp, "<a href='$1'>$1</a>");
-			$scope.license = $scope.exchangeRates.license.replace(exp, "<a href='$1'>$1</a>");
+			$scope.disclaimer = $scope.exchangeRates.disclaimer.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+			$scope.license = $scope.exchangeRates.license.replace(exp, "<a href='$1' target='_blank'>$1</a>");
 
 
-			localStorage.setItem("disclaimer", $scope.disclaimer);
-			localStorage.setItem("license", $scope.license);
+			window.localStorage.setItem("disclaimer", $scope.disclaimer);
+			window.localStorage.setItem("license", $scope.license);
+			resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
+
 		}
 	};
 
@@ -97,9 +94,6 @@ function CurrenciesCtrl($scope, $http, Currencies){
 			$scope.yearTotal = parseFloat($scope.exchangeRates1year.rates[$scope.selectedToCode] * (1/$scope.exchangeRates1year.rates[$scope.selectedFromCode]) * $scope.howMuch).toFixed(2) + " " + $scope.selectedToCode;
 		//}
 
-		console.log("before resize" + $("#exchangeToday").outerWidth());
-		console.log($("#exchangeResults").outerWidth());
-
 		resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
 	};
 
@@ -107,7 +101,6 @@ function CurrenciesCtrl($scope, $http, Currencies){
 		var fontsize = 100;
 		theTextCopy.css({"font-size": fontsize+"px", "line-height": fontsize+"px"});
 		if (theTextCopy.outerWidth(true) > theContainer.width()-40){
-			console.log("in if");
 			for (var i=fontsize; i>=12; i--){
 				theTextCopy.css({"font-size": i+"px", "line-height": i+"px"});
 				if (theTextCopy.outerWidth(true) <= theContainer.width()-40){
@@ -116,10 +109,6 @@ function CurrenciesCtrl($scope, $http, Currencies){
 				}
 			}
 		}
-		//var i = /*remove unit from integer*/
-		// while( /*text overlaps div*/ ){
-		//     theText.css("font-size", --i+"px");
-		// }
 	};
 
 	$scope.setFromCode = function(code){
@@ -140,5 +129,7 @@ function CurrenciesCtrl($scope, $http, Currencies){
 			return false;
 		}
 	};
+
+	resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
 
 }
