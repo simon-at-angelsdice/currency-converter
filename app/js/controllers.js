@@ -8,28 +8,16 @@ function JSON_CALLBACK(data) {
 
 function CurrenciesCtrl($scope, $http, Currencies){
 	var todayDate = new Date();
+
+	$scope.locale = userLocale;
+	$scope.serviceCounter = 0;
+	$scope.numberOfServices = 3;
+	$scope.howMuch = 0;
+	$scope.selectedFromCode = "CAD";
+	$scope.selectedToCode = "USD";
+
 	todayDate = todayDate.getFullYear() + "-" + ('0'+todayDate.getMonth()+1).slice(-2) + "-" + ('0'+todayDate.getDate()).slice(-2);
-	if (window.localStorage.getItem("today") !== null && todayDate == window.localStorage.getItem("today"))
-	{
-		$scope.exchangeRates = JSON.parse(window.localStorage.getItem("todaysRates"));
-		$scope.exchangeRates1year = JSON.parse(window.localStorage.getItem("weekRates"));
-		$scope.exchangeRates1Week = JSON.parse(window.localStorage.getItem("yearRates"));		
-		$scope.disclaimer = window.localStorage.getItem("disclaimer");
-		$scope.license = window.localStorage.getItem("license");
-	}
-	else
-	{
-		//$scope.getNewData();
-		$scope.exchangeRates = Currencies.getTodayRates(function(exchangeRates){
-			$scope.isComplete();
-		});
-		$scope.exchangeRates1year = Currencies.get1YearRates(function(exchangeRates1year){
-			$scope.isComplete();
-		});
-		$scope.exchangeRates1Week = Currencies.get1WeekRates(function(exchangeRates1Week){
-			$scope.isComplete();
-		});
-	}
+		
 	$http.get('data/currencies.json').success(function(data) {
 		$scope.currencies = data;
 	});
@@ -47,21 +35,29 @@ function CurrenciesCtrl($scope, $http, Currencies){
 
 	};
 
-	$scope.serviceCounter = 0;
-	$scope.numberOfServices = 3;
 
-	$scope.howMuch = 1;
-	$scope.selectedFromCode = "GBP";
-	$scope.selectedToCode = "EUR";
+	$scope.setSelectBoxes = function(){
+		if ($scope.locale == "en_GB"){
+			$scope.selectedFromCode = "GBP";
+			$scope.selectedToCode = "EUR";
+		}
+		else if ($scope.locale == "en_CA"){
+			$scope.selectedFromCode = "CAD";
+			$scope.selectedToCode = "USD";
+		}
+		else{
+			$scope.selectedFromCode = "USD";
+			$scope.selectedToCode = "GBP";
+		}
+	};
 
 	$scope.$watch('howMuch', function() {
-		//$scope.howMuch = $scope.howMuch.replace(/[^\d.]+/g, '');//parseInt($scope.howMuch);
 		$scope.setTotals();
-		resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
 	});
 
 	$scope.isComplete = function(){
 		$scope.serviceCounter = $scope.serviceCounter+1;
+
 		if ($scope.serviceCounter >= $scope.numberOfServices)
 		{
 			$scope.setTotals();
@@ -80,20 +76,19 @@ function CurrenciesCtrl($scope, $http, Currencies){
 
 			window.localStorage.setItem("disclaimer", $scope.disclaimer);
 			window.localStorage.setItem("license", $scope.license);
+
 			resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
+
+			$scope.setSelectBoxes();
 
 		}
 	};
 
 
 	$scope.setTotals = function(){
-
-		//if ($scope.serviceCounter >= $scope.numberOfServices){
-			$scope.todayTotal = parseFloat($scope.exchangeRates.rates[$scope.selectedToCode] * (1/$scope.exchangeRates.rates[$scope.selectedFromCode]) * $scope.howMuch).toFixed(2) + " " + $scope.selectedToCode;
-			$scope.weekTotal = parseFloat($scope.exchangeRates1Week.rates[$scope.selectedToCode] * (1/$scope.exchangeRates1Week.rates[$scope.selectedFromCode]) * $scope.howMuch).toFixed(2) + " " + $scope.selectedToCode;
-			$scope.yearTotal = parseFloat($scope.exchangeRates1year.rates[$scope.selectedToCode] * (1/$scope.exchangeRates1year.rates[$scope.selectedFromCode]) * $scope.howMuch).toFixed(2) + " " + $scope.selectedToCode;
-		//}
-
+		$scope.todayTotal = parseFloat($scope.exchangeRates.rates[$scope.selectedToCode] * (1/$scope.exchangeRates.rates[$scope.selectedFromCode]) * $scope.howMuch).toFixed(2) + " " + $scope.selectedToCode;
+		$scope.weekTotal = parseFloat($scope.exchangeRates1Week.rates[$scope.selectedToCode] * (1/$scope.exchangeRates1Week.rates[$scope.selectedFromCode]) * $scope.howMuch).toFixed(2) + " " + $scope.selectedToCode;
+		$scope.yearTotal = parseFloat($scope.exchangeRates1year.rates[$scope.selectedToCode] * (1/$scope.exchangeRates1year.rates[$scope.selectedFromCode]) * $scope.howMuch).toFixed(2) + " " + $scope.selectedToCode;
 		resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
 	};
 
@@ -113,11 +108,13 @@ function CurrenciesCtrl($scope, $http, Currencies){
 
 	$scope.setFromCode = function(code){
 		$scope.selectedFromCode = code;
+		//gaPlugin.setVariable(nativePluginResultHandler, nativePluginErrorHandler, "CurrencyFrom", code, 1);
 		$scope.setTotals();
 	};
 
 	$scope.setToCode = function(code){
 		$scope.selectedToCode = code;
+		//gaPlugin.setVariable(nativePluginResultHandler, nativePluginErrorHandler, "CurrencyTo", code, 1);
 		$scope.setTotals();
 	};
 
@@ -130,6 +127,39 @@ function CurrenciesCtrl($scope, $http, Currencies){
 		}
 	};
 
-	resizeFont($("#exchangeTodayCopy"), $("#exchangeToday"), $("#exchangeResults"));
+	$scope.init = function(){
+		if (window.localStorage.getItem("today") !== null && todayDate == window.localStorage.getItem("today"))
+		{
+			$scope.exchangeRates = JSON.parse(window.localStorage.getItem("todaysRates"));
+			$scope.exchangeRates1year = JSON.parse(window.localStorage.getItem("weekRates"));
+			$scope.exchangeRates1Week = JSON.parse(window.localStorage.getItem("yearRates"));
+			$scope.disclaimer = window.localStorage.getItem("disclaimer");
+			$scope.license = window.localStorage.getItem("license");
+			$scope.setSelectBoxes();
+		}
+		else
+		{
+			if (isConnected){
+				//$scope.getNewData();
+				$scope.exchangeRates = Currencies.getTodayRates(function(exchangeRates){
+					$scope.isComplete();
+				});
+				$scope.exchangeRates1year = Currencies.get1YearRates(function(exchangeRates1year){
+					$scope.isComplete();
+				});
+				$scope.exchangeRates1Week = Currencies.get1WeekRates(function(exchangeRates1Week){
+					$scope.isComplete();
+				});
+			}
+			else if(window.localStorage.getItem("today")!== null){
+				navigator.notification.alert('Your exchange rates are out of date. Please go online to get the latest rates',nativePluginResultHandler,'Data out of date','OK');
+			}
+			else{
+				navigator.notification.alert('You need to connect to the internet to get exchange rates',nativePluginResultHandler,'No Connection','OK');
+			}
+		}
 
+	};
+
+	$scope.init();
 }

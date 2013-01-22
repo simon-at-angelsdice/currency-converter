@@ -2,7 +2,7 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "com.angelsdice.currency-converter"
-        version   = "0.0.2">
+        version   = "0.0.63">
     <name>Currency Converter</name>
 
     <description>
@@ -14,8 +14,11 @@
     </author>
 
     <feature name="http://api.phonegap.com/1.0/device" />
+    <feature name="http://api.phonegap.com/1.0/geolocation"/>
 
-    <preference name="phonegap-version" value="2.1.0" />
+    <gap:plugin name="Analytics" /> <!-- latest release -->
+
+    <preference name="phonegap-version" value="2.2.0" />
     <preference name="orientation"      value="portrait" />
     <preference name="target-device"    value="universal" />
     <preference name="fullscreen"       value="false" />
