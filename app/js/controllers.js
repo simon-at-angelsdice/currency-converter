@@ -108,13 +108,15 @@ function CurrenciesCtrl($scope, $http, Currencies){
 
 	$scope.setFromCode = function(code){
 		$scope.selectedFromCode = code;
-		//gaPlugin.setVariable(nativePluginResultHandler, nativePluginErrorHandler, "CurrencyFrom", code, 1);
+		gaPlugin.setVariable(nativePluginResultHandler, nativePluginErrorHandler, "CurrencyFrom", code, 1);
+		gaPlugin.trackEvent( nativePluginResultHandler, nativePluginErrorHandler, "Select", "Change", "Currency From", 1);
 		$scope.setTotals();
 	};
 
 	$scope.setToCode = function(code){
 		$scope.selectedToCode = code;
-		//gaPlugin.setVariable(nativePluginResultHandler, nativePluginErrorHandler, "CurrencyTo", code, 1);
+		gaPlugin.setVariable(nativePluginResultHandler, nativePluginErrorHandler, "CurrencyTo", code, 1);
+		gaPlugin.trackEvent( nativePluginResultHandler, nativePluginErrorHandler, "Select", "Change", "Currency To", 1);
 		$scope.setTotals();
 	};
 
@@ -140,7 +142,6 @@ function CurrenciesCtrl($scope, $http, Currencies){
 		else
 		{
 			if (isConnected){
-				//$scope.getNewData();
 				$scope.exchangeRates = Currencies.getTodayRates(function(exchangeRates){
 					$scope.isComplete();
 				});

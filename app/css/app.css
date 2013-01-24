@@ -119,6 +119,10 @@ input.large{
   visibility:hidden;
 }
 
+#topAdBanner{
+  text-align:center;
+}
+
 footer{
   background-color: #242621;
   color: #D9D7C5;

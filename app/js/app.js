@@ -41,12 +41,10 @@ function goingAway() {
 }
 
 function nativePluginResultHandler (result) {
-	//alert('nativePluginResultHandler - '+result);
 
 }
 
 function nativePluginErrorHandler (error) {
-	//alert('nativePluginErrorHandler - '+error);
 }
 
 function onDeviceReady() {
@@ -61,9 +59,16 @@ function onDeviceReady() {
 	angular.bootstrap(document, ['myApp']);
 	
 	//loaded();
-    // gaPlugin = window.plugins.gaPlugin;
-    // alert(gaPlugin);
-    // gaPlugin.init(nativePluginResultHandler, nativePluginErrorHandler, "UA-37773225-1", 10);
+    gaPlugin = window.plugins.gaPlugin;
+    gaPlugin.init(gaSuccess, nativePluginErrorHandler, "UA-37773225-2", 10);
+}
+
+function trackPageSuccess(){
+	gaPlugin.setVariable(nativePluginResultHandler, nativePluginErrorHandler, "Device info", device.name + '|' + device.platform + '|' + device.version, 2);
+}
+
+function gaSuccess(){
+	gaPlugin.trackPage(trackPageSuccess, nativePluginErrorHandler, "index.html");
 }
 	
 	
